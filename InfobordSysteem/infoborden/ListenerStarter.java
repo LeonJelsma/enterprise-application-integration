@@ -1,16 +1,13 @@
 package infoborden;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.ExceptionListener;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
+import javax.jms.*;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public  class ListenerStarter implements Runnable, ExceptionListener {
+	private static final String subject = "busjson";
+
 	private String selector="";
 	private Infobord infobord;
 	private Berichten berichten;
@@ -26,21 +23,15 @@ public  class ListenerStarter implements Runnable, ExceptionListener {
 
 	public void run() {
         try {
-            ActiveMQConnectionFactory connectionFactory = 
-            		new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_BROKER_URL);
-//			TODO maak de connection aan
-//          Connection connection = ?????;
-//          connection.start();
-//          connection.setExceptionListener(this);
-//			TODO maak de session aan
-//          Session session = ?????;
-//			TODO maak de destination aan
-//          Destination destination = ?????;
-//			TODO maak de consumer aan
-//          MessageConsumer consumer = ?????;
-            System.out.println("Produce, wait, consume"+ selector);
-//			TODO maak de Listener aan
-//          consumer.?????;
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_BROKER_URL);
+			Connection connection = connectionFactory.createConnection();
+			connection.start();
+			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			Destination destination = session.createQueue(subject);
+			MessageConsumer consumer = session.createConsumer(destination);
+			MessageListener listener = new QueueListener("consumer", infobord, berichten);
+			consumer.setMessageListener(listener);
+            System.out.println("Produce, wait, consume "+ selector);
         } catch (Exception e) {
             System.out.println("Caught: " + e);
             e.printStackTrace();

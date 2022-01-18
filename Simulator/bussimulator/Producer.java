@@ -15,8 +15,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class Producer {
     private static String url = ActiveMQConnection.DEFAULT_BROKER_URL;
-//  TODO hier de naam van de destination invullen
-    private static String subject = "??????";
+    private static String subject = "busxml";
     
     private Session session;
     private Connection connection;
@@ -43,7 +42,7 @@ public class Producer {
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         Destination destination = session.createQueue(subject);
         producer = session.createProducer(destination);
-       }
+    }
     
     
     private void sendTextMessage(String message) throws JMSException {
