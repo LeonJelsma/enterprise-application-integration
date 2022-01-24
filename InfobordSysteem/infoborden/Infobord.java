@@ -55,7 +55,7 @@ public class Infobord extends Application{
 
 	@Override
 	public void start(Stage primaryStage) {
-		String selector = String.format("halteNaam = '%s' AND richting = '%s'", halte, richting);
+		String selector = String.format("halte = '%s' AND richting = '%s'", halte, richting);
 		thread(new ListenerStarter(selector, this, berichten),false);
 		GridPane pane = new GridPane();
 		pane.setAlignment(Pos.CENTER_LEFT);
